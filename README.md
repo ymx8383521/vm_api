@@ -1,5 +1,6 @@
 # 数据库
 python3 manage.py makemigrations
+
 python3 manage.py migrate
 
 # 创建超级用户
