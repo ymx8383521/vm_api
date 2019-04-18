@@ -61,7 +61,7 @@ class VHostView(ModelViewSet):
     serializer_class = VirtualMachineSerializer
     pagination_class = PageNumberPagination
     filter_backends = (DjangoFilterBackend,)
-    filter_fields=('vm_installed',)
+    filter_fields=('vm_installed','vm_audit')
 
     def headers(self,request,*args,**kwargs):
         header_fields_list = models.VirtualMachine._meta.fields
