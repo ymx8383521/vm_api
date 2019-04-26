@@ -12,6 +12,7 @@ from api.utils.serializer import VirtualMachineSerializer
 from api.utils.serializer import MachineRoomSerializer
 from  rest_framework.decorators import api_view,authentication_classes
 from django_filters.rest_framework import DjangoFilterBackend
+import subprocess
 
 # Create your views here.
 
@@ -73,6 +74,20 @@ class VHostView(ModelViewSet):
     # @authentication_classes((MyAuthentication,))
     # def update(self, request, *args, **kwargs):
     #     pass
+
+
+class VHostCreate(APIView):
+    def get(self,request,*args,**kwargs):
+        ret = {'code': 1000, 'msg': ''}
+        create='/usr/bin/python3 /export/VMWare_Auto/vm_create/bin/create_if_vm.py'
+        obj = subprocess.Popen(create, shell=True,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+        stdout = obj.stdout.read()
+        stderr = obj.stderr.read()
+        ret["msg"]=stdout.decode('gbk')
+        ret["err"]=stderr.decode('gbk')
+        return Response(ret)
 
 
 

@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^(?P<version>[v1|v2]+)/auth/$', views.AuthView.as_view()),
     url(r'^(?P<version>[v1|v2]+)/host/headers/$', views.HostView.as_view({'get': 'headers'})),
     url(r'^(?P<version>[v1|v2]+)/vmhost/headers/$', views.VHostView.as_view({'get': 'headers'})),
+    url(r'^(?P<version>[v1|v2]+)/vmhost/vcreate/$', views.VHostCreate.as_view()),
     # 自动生成路由
     url(r'^(?P<version>[v1|v2]+)/', include(route.urls)),
     url(r'^(?P<version>[v1|v2]+)/room/$', views.RoomView.as_view({'get': 'list','post':'create'})),
