@@ -78,15 +78,18 @@ class VHostView(ModelViewSet):
 
 class VHostCreate(APIView):
     def get(self,request,*args,**kwargs):
-        ret = {'code': 1000, 'msg': ''}
+        ret = {'code': 2000, 'msg': ''}
         create='/usr/bin/python3 /export/VMWare_Auto/vm_create/bin/create_if_vm.py'
         obj = subprocess.Popen(create, shell=True,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
         stdout = obj.stdout.read()
         stderr = obj.stderr.read()
-        ret["msg"]=stdout.decode('gbk')
-        ret["err"]=stderr.decode('gbk')
+        if stderr:
+            ret["err"] = stderr.decode('utf-8')
+            ret["code"] = 2001
+        else:
+            ret["msg"] = '虚拟机安装中'
         return Response(ret)
 
 
