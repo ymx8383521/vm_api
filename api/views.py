@@ -13,7 +13,7 @@ from api.utils.serializer import MachineRoomSerializer
 from  rest_framework.decorators import api_view,authentication_classes
 from django_filters.rest_framework import DjangoFilterBackend
 import subprocess
-
+from rest_framework import parsers
 # Create your views here.
 
 class AuthView(APIView):
@@ -90,6 +90,29 @@ class VHostCreate(APIView):
             ret["code"] = 2001
         else:
             ret["msg"] = '虚拟机安装中'
+        return Response(ret)
+
+
+class VDisconnect(APIView):
+    def get(self,request,*args,**kwargs):
+        ret={'code': 2100, 'msg': ''}
+        ip=request.query_params.get('ip')
+        obj=models.VirtualMachine.objects.filter(vm_ip=ip).first()
+        if obj:
+            vm_name=obj.vm_name
+            dc=obj.host_machine.room_site.room_name
+            # print(vm_name,dc)
+            disconnect='python3 "D:\\myproject\\vm_create\\bin\\discdrom.py" "%s" "%s"'%(dc,vm_name)
+            obj = subprocess.Popen(disconnect, shell=True,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+            stdout = obj.stdout.read()
+            stderr = obj.stderr.read()
+            if stderr:
+                ret["msg"] = stderr.decode('utf-8')
+                ret["code"] = 2101
+            else:
+                ret["msg"] = 'cdrom已断开'
         return Response(ret)
 
 
